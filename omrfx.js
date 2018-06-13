@@ -91,7 +91,7 @@ function myModule(){
         isArray: (x) => x.constructor === Array,
         random: () => Math.random(),
         randomAB: (x,y) =>Math.floor((Math.random() * y)+x),
-        RandomN: "",  
+        randomN:(maximo) =>Math.floor(Math.random()*(maximo+1))
     }
     omrf.discrete = {
         factorial: function(n) {
@@ -100,14 +100,128 @@ function myModule(){
                 total = total * i; 
             }
             return total; 
+        },
+
+        permutation: (arreglo) => {
+            nuevoarreglo = [];
+            for(x=0;x<arreglo.length;x++){
+                for(y=0;y<arreglo.length;y++){
+                    nuevoarreglo.push(arreglo[x]+""+arreglo[y]);
+                }
+            }
+            return nuevoarreglo;
         }
     }
-
-    //TODO
     omrf.date = {
+        month: (x) =>{
+            switch(x){
+                case 1: {
+                   console.log('Enero');
+                   break;}
+                case 2: {
+                   console.log('Febrero');
+                   break;}
+                case 3: {
+                   console.log('marzo');
+                   break;}
+                case 4: {
+                   console.log('Abril');
+                   break;}
+                case 5: {
+                   console.log('Mayo');
+                   break;}
+                case 6: {
+                   console.log('Junio');
+                   break;}
+                case 7: {
+                   console.log('Julio');
+                   break;}
+                case 8: {
+                   console.log('Agosto');
+                   break;}
+                case 9: {
+                   console.log('Septiembre');
+                   break;}
+                case 10: {
+                   console.log('Octubre');
+                   break;}
+                case 11: {
+                   console.log('Noviembre');
+                   break;}
+                case 12: {
+                   console.log('Diciembre');
+                   break;}
+                default: {
+                   console.log('No existe '+mes);
+                    break;}
+                }
+        },
 
-    };//month, week, season, isLeap 
+        week: (x) =>{
+            switch(x){
+                case 1: {
+                   console.log('lunes');
+                   break;}
+                case 2: {
+                   console.log('martes');
+                   break;}
+                case 3: {
+                   console.log('miercoles');
+                   break;}
+                case 4: {
+                   console.log('jueves');
+                   break;}
+                case 5: {
+                   console.log('viernes');
+                   break;}
+                case 6: {
+                   console.log('sabado');
+                   break;}
+                case 7: {
+                   console.log('domingo');
+                   break;}
+                default: {
+                   console.log('No existe '+dia);
+                    break;}
+                }
+        },
 
+        season: (x) =>{
+            switch(x){
+                case 1:
+                case 2:
+                case 3:{
+                    console.log("Primavera");
+                    break;
+                }
+                case 4:
+                case 5:
+                case 6:{
+                    console.log("Verano");
+                    break;
+                }
+                case 7:
+                case 8:
+                case 9:{
+                    console.log("Otoño")
+                    break;
+                }
+                case 10:
+                case 11:
+                case 12:{
+                    console.log("Invierno");
+                    break;
+                }
+                default:{
+                    console.log("No existe");
+                }
+            }
+        },
+
+        isLeap:(year) =>{
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+    }
     omrf.text = {
         words: () =>{
             let palabras = 0
