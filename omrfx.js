@@ -103,9 +103,10 @@ function myModule(){
         }
     }
 
-    omrf.date = {};//month, week, season, isLeap
+    //TODO
+    omrf.date = {};//month, week, season, isLeap 
 
-
+    //TODO
     //place text into a 'textarea' and get it from there
     //not from a file, may use example
     omrf.text = {};//words, sentences, paragraphs, isEmpty
@@ -129,19 +130,104 @@ function myModule(){
             }
         }
     }
+    omrf.Vector = class Vector {
+        constructor(num){
+            if(typeof num != 'number') throw 'Not a number'
+            this.vector = new Array(num)
+            this.length = num
+        }
+    
+        setZeros(){
+            for(let i = 0; i < this.vector.length; i++){
+                this.vector[i] = 0;
+            }
+        }
+        setOnes(){
+            for(let i = 0; i < this.vector.length; i++){
+                this.vector[i] = 1;
+            }
+        }
+        setRandom(){
+            for(let i = 0; i < this.vector.length; i++){
+                this.vector[i] = Math.floor((Math.random() * 100) + 1);
+            }
+        }
+        setWithN(x){
+            for(let i = 0; i < this.vector.length; i++){
+                this.vector[i] = x;
+            }
+        }
+        setRange(rango){
+            for(let i = 0; i < this.vector.length; i++){
+                this.vector[i] = (Math.random() * rango) + 1;
+            }
+        }
+        
+        //Operaciones punto a punto
+        sumV(vec){
+            let resVec
+            if (vec.length > this.length) resVec = new Array(this.length)
+            else resVec = new Array(vec.length)
+    
+            if(resVec.length == 1) throw 'Usar sumE'
+    
+            for(let i = 0; i < resVec.length; i++){
+                resVec[i] = vec.vector[i] + this.vector[i]
+            }
+    
+            return resVec
+        }
+        multV(vec){
+            let resVec
+            if (vec.length > this.length) resVec = new Array(this.length)
+            else resVec = new Array(vec.length)
+    
+            if(resVec.length == 1) throw 'Usar multE'
+    
+            for(let i = 0; i < resVec.length; i++){
+                resVec[i] = vec.vector[i] * this.vector[i]
+            }
+    
+            return resVec
+        }
+        resV(vec){
+            let resVec
+            if (vec.length > this.length) resVec = new Array(this.length)
+            else resVec = new Array(vec.length)
+    
+            if(resVec.length == 1) throw 'Usar resE'
+    
+            for(let i = 0; i < resVec.length; i++){
+                resVec[i] = this.vector[i] - vec.vector[i]
+            }
+    
+            return resVec
+        }
+        divV(vec){
+            let resVec
+            if (vec.length > this.length) resVec = new Array(this.length)
+            else resVec = new Array(vec.length)
+    
+            if(resVec.length == 1) throw 'Usar divE'
+    
+            for(let i = 0; i < resVec.length; i++){
+                resVec[i] = this.vector[i] / vec.vector[i]
+            }
+    
+            return resVec
+        }
 
-    /////////////////  moduleName  /////////////////////////
-    //4-ops, dot, distance, isVector, isOrthogonal,
-    //setZeros, setRand, setRange, setWith
-    omrf.vector = {};
+        isVector(vec){
+            return (vec instanceof omrf.Vector)
+        }
+    }
 
-    omrf.Matriz =  class Matriz{
+    omrf.Matriz =  class Matriz {
         constructor(filas, columnas) {
             this.filas = filas;
             this.columnas = columnas;
             this.matriz = new Array(filas).fill(new Array(columnas).fill(null));
         }
-    
         setNewValues(m) {
             const len = m[0].length;
             this.filas = m.length;
@@ -149,70 +235,57 @@ function myModule(){
             this.matriz = m;
             return this;
         }
-    
         llenarCeros() {
             this.llenarCon(0);
         }
-    
         llenarUno() {
             this.llenarCon(1);
         }
-    
         llenarRnd(max) {
             this.matriz = this.matriz.map(arr =>
                 arr.map(val => Math.random() * max)
             );
         }
-    
         llenarRango(max) {
             this.matriz = this.matriz.map(arr =>
                 arr.map(() => Math.floor(Math.random() * max))
             );
         }
-    
         llenarCon(n) {
             this.matriz = this.matriz.map(arr => arr.fill(n));
         }
-    
         fila(r) {
             return this.matriz[r];
         }
-    
         columna(c) {
             return this.matriz.map(arr => arr[c]);
         }
-    
         suma() {
             return this.matriz.reduce((prev, arr) => {
                 return prev + arr.reduce((prev, val) => prev + val, 0);
             }, 0);
         }
-    
         sumaM(m) {
             let matrix = this.matriz.map((arr, y) =>
                 arr.map((e, x) => e + m.matriz[y][x])
             );
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         sumaE(e) {
             if (isNaN(e)) throw new Error("Valor no escalar");
             let matrix = this.matriz.map(row => row.map(val => val + e));
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         restaM(m) {
             let matrix = this.matriz.map((arr, y) =>
                 arr.map((e, x) => e - m.matriz[y][x])
             );
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         restaE(e) {
             let matrix = this.matriz.map(row => row.map(val => val - e));
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         multM(m) {
             let matrix = this.matriz.map((row, y) => {
                 let newRow = [];
@@ -229,31 +302,26 @@ function myModule(){
     
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         multE(e) {
             let matrix = this.matriz.map(row => row.map(val => val * e));
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         promedio() {
             let len = this.matriz.reduce((prev, arr) => prev + arr.length, 0);
             return this.suma() / len;
         }
-    
         max() {
             return this.matriz.reduce((prev, arr) => {
                 let max = Math.max(...arr);
                 return max > prev ? max : prev;
             }, 0);
         }
-    
         min() {
             return this.matriz.reduce((prev, arr) => {
                 let max = Math.min(...arr);
                 return max < prev ? max : prev;
             }, 0);
         }
-    
         transpose() {
             let base = Array.from({ length: this.columnas }).map(() =>
                 Array.from(1)
@@ -266,7 +334,6 @@ function myModule(){
     
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         static matrizIdentidad(n = 2) {
             let x = 0;
             let matrix = Array.from({ length: n }).fill(
@@ -281,7 +348,6 @@ function myModule(){
             });
             return new omrf.Matriz().setNewValues(matrix);
         }
-    
         isIdentidad() {
             let x = 0;
             return this.matriz.every(row => {
@@ -290,11 +356,9 @@ function myModule(){
                 return r;
             });
         }
-    
         isCuadrada() {
             return this.filas === this.columnas;
         }
-    
         isSimetrica() {
             if (!this.isCuadrada()) {
                 return false;
@@ -305,7 +369,6 @@ function myModule(){
                 row.every((val, x) => val === trans.matriz[y][x])
             );
         }
-    
         isValidForOperation(operation, matrix) {
             let result = false;
             switch (operation) {
@@ -411,6 +474,7 @@ function myModule(){
         }
         return roman;
     }
+
     omrf.Words = class Words{
 
         constructor(){
@@ -592,6 +656,7 @@ function myModule(){
     }
 
     /////////////////  moduleName  /////////////////////////
+    //TODO
     omrf.line = {};//clone, isLine, isParallel, isPerperdicular
 
 
@@ -688,6 +753,8 @@ function myModule(){
             return (c instanceof omrf.Square)
         }
     }
+
+    //TODO
     /////////////////  moduleName  /////////////////////////
     omrf.trapezoid = {};//clone, area, perimeter, isTrapezoid
 
