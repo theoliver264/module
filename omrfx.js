@@ -2,21 +2,24 @@ function myModule(){
     let omrf = {}
     omrf.autor = "Oliver Rios"
     omrf.version = "0.1.0001"
-
-    /////////////////  moduleName  /////////////////////////
-    //isNumber(reuse), isPositive, isNegative,
-    //isEven, isOdd, isDivisibleBy, trichotomy
     omrf.number = {
-        isPositive: (x) =>{ 
+        isNumber: (x) => typeof x === "number",
+        isPositive: (x) =>{
             if(x > 0) return true
             else return false
         },
         isNegative: (x) => {
             if(x<0) return true
             else return false
-        } 
+        },
+        isEven: (x) => (x % 2 == 0) ? true : false,
+        isOdd: (x) => (x % 2 != 0) ? true : false,
+        isDivisibleBy: (num, div) => (num % div == 0) ? true : false,
+        trichotomy: (x,y) => {
+            if(x == y) console.log( x+" = "+y)
+            else if (x < y) console.log(x+ " < ")
+        }
     }
-    omrf.fraction = {}
     omrf.math = {
         abs: (x) => Math.abs(x),
         pi : 3.14159,
@@ -27,73 +30,594 @@ function myModule(){
         pow: (num,exp) => Math.pow(num,exp),
         double: (x) => x*2
     }
+    omrf.fraction = function(n,d){
+        if(Number.isInteger(n) && Number.isInteger(d))  {
+            this.n = n
+            this.d = d
+        } else throw "Numeros no enteros."
+
+        this.multiplicar = function(frac){
+            let resN = this.n * frac.n
+            let resD = this.d * frac.d
+            return new {n: resN,d: resD}
+        }
     
+        this.dividir = function(frac){
+            let resN = this.n * frac.d
+            let resD = this.d * frac.n
+            return new {n: resN,d: resD}
+        }
+    
+        this.sumar = function(frac){
+            let resD 
+            let resN
+            if(frac.d == this.d) {
+                resN = frac.n + this.n
+                resD = this.d
+                return {n: resN,d: resD}
+            }
+            else {
+                resN = (this.n * frac.d) + (this.d + frac.n)
+                resD = this.d * frac.d
+                return {n: resN,d: resD}
+            }
+        }
+    
+        this.restar = function(frac){
+            let resD
+            let resN
+            if(frac.d == this.d){
+                resN = frac.n - this.n
+                resD = this.d
+                return {n: resN,d: resD}
+            }
+            else {
+                resN = (this.n * frac.d) - (this.d + frac.n)
+                resD = this.d * frac.d
+                return {n: resN,d: resD}
+            }
+        }
+    }
+    omrf.arithmetic = {
+        suma: (x,y) => x+y,
+        resta: (x,y) => x-y,
+        div: (x,y) => x/y,
+        mult: (x,y) => x*y
+    }
+    omrf.util = {
+        isFunction: (x) => typeof x === "function",
+        isObject: (x) => typeof x === "object",
+        isNumber: (x) => typeof x === "number",
+        isArray: (x) => x.constructor === Array,
+        random: () => Math.random(),
+        randomAB: (x,y) =>Math.floor((Math.random() * y)+x),
+        RandomN: "",  
+    }
 
     /////////////////  moduleName  /////////////////////////
-    //4-ops : sum, substraction, multiplication, division,
-    //may shorten names, eg sub, div
-    wxyz.fraction = {};//4-ops, gcd, isFraction
-    wxyz.arithmetic = {};//4-ops
+    omrf.date = {};//month, week, season, isLeap
 
     /////////////////  moduleName  /////////////////////////
-    //isFunction, isObject, isNumber(reuse), isArray(reuse)
-    //random, randomAB, randomN, shuffle
-    wxyz.util = {};
-
-    /////////////////  moduleName  /////////////////////////
-    wxyz.date = {};//month, week, season, isLeap
-
-    /////////////////  moduleName  /////////////////////////
-    wxyz.discrete = {};//factorial, permutation
-
-    /////////////////  moduleName  /////////////////////////
-    wxyz.math={};//PI, RADIAN, GRADE, abs, sum(reuse), square, pow, double
+    omrf.discrete = {};//factorial, permutation
 
     /////////////////  moduleName  /////////////////////////
     //place text into a 'textarea' and get it from there
     //not from a file, may use example
-    wxyz.text = {};//words, sentences, paragraphs, isEmpty
+    omrf.text = {};//words, sentences, paragraphs, isEmpty
 
     /////////////////  moduleName  /////////////////////////
-    wxyz.series = {};//rangeAB, rangeN, fibonacci
+    omrf.series = {};//rangeAB, rangeN, fibonacci
 
     /////////////////  moduleName  /////////////////////////
     //4-ops, dot, distance, isVector, isOrthogonal,
     //setZeros, setRand, setRange, setWith
-    wxyz.vector = {};
+    omrf.vector = {};
 
-    //3-ops, isIdentity, isMatrix, getRow, getCol,
-    //isSymmetric, isSquare, transpose
-    wxyz.matrix = {};
+    omrf.Matriz =  class Matriz{
+        constructor(filas, columnas) {
+            this.filas = filas;
+            this.columnas = columnas;
+            this.matriz = new Array(filas).fill(new Array(columnas).fill(null));
+        }
+    
+        setNewValues(m) {
+            const len = m[0].length;
+            this.filas = m.length;
+            this.columnas = len;
+            this.matriz = m;
+            return this;
+        }
+    
+        llenarCeros() {
+            this.llenarCon(0);
+        }
+    
+        llenarUno() {
+            this.llenarCon(1);
+        }
+    
+        llenarRnd(max) {
+            this.matriz = this.matriz.map(arr =>
+                arr.map(val => Math.random() * max)
+            );
+        }
+    
+        llenarRango(max) {
+            this.matriz = this.matriz.map(arr =>
+                arr.map(() => Math.floor(Math.random() * max))
+            );
+        }
+    
+        llenarCon(n) {
+            this.matriz = this.matriz.map(arr => arr.fill(n));
+        }
+    
+        fila(r) {
+            return this.matriz[r];
+        }
+    
+        columna(c) {
+            return this.matriz.map(arr => arr[c]);
+        }
+    
+        suma() {
+            return this.matriz.reduce((prev, arr) => {
+                return prev + arr.reduce((prev, val) => prev + val, 0);
+            }, 0);
+        }
+    
+        sumaM(m) {
+            let matrix = this.matriz.map((arr, y) =>
+                arr.map((e, x) => e + m.matriz[y][x])
+            );
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        sumaE(e) {
+            if (isNaN(e)) throw new Error("Valor no escalar");
+            let matrix = this.matriz.map(row => row.map(val => val + e));
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        restaM(m) {
+            let matrix = this.matriz.map((arr, y) =>
+                arr.map((e, x) => e - m.matriz[y][x])
+            );
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        restaE(e) {
+            let matrix = this.matriz.map(row => row.map(val => val - e));
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        multM(m) {
+            let matrix = this.matriz.map((row, y) => {
+                let newRow = [];
+                for (let x = 0; x < m.filas; x++) {
+                    let col = m.getCol(x);
+                    let r = row.reduce((acc, curr, i) => {
+                        acc += curr * col[i];
+                        return acc;
+                    }, 0);
+                    newRow.push(r);
+                }
+                return newRow;
+            });
+    
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        multE(e) {
+            let matrix = this.matriz.map(row => row.map(val => val * e));
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        promedio() {
+            let len = this.matriz.reduce((prev, arr) => prev + arr.length, 0);
+            return this.suma() / len;
+        }
+    
+        max() {
+            return this.matriz.reduce((prev, arr) => {
+                let max = Math.max(...arr);
+                return max > prev ? max : prev;
+            }, 0);
+        }
+    
+        min() {
+            return this.matriz.reduce((prev, arr) => {
+                let max = Math.min(...arr);
+                return max < prev ? max : prev;
+            }, 0);
+        }
+    
+        transpose() {
+            let base = Array.from({ length: this.columnas }).map(() =>
+                Array.from(1)
+            );
+    
+            let matrix = this.matriz.reduce((m, row) => {
+                row.forEach((val, i) => m[i].push(val));
+                return m;
+            }, base);
+    
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        static matrizIdentidad(n = 2) {
+            let x = 0;
+            let matrix = Array.from({ length: n }).fill(
+                Array.from({ length: n }).fill(null)
+            );
+            matrix = matrix.map((row, i) => {
+                row = row.map((val, j) => {
+                    return j === x ? 1 : 0;
+                });
+                x++;
+                return row;
+            });
+            return new omrf.Matriz().setNewValues(matrix);
+        }
+    
+        isIdentidad() {
+            let x = 0;
+            return this.matriz.every(row => {
+                let r = row[x] === 1;
+                x++;
+                return r;
+            });
+        }
+    
+        isCuadrada() {
+            return this.filas === this.columnas;
+        }
+    
+        isSimetrica() {
+            if (!this.isCuadrada()) {
+                return false;
+            }
+    
+            let trans = this.transpose();
+            return this.matriz.every((row, y) =>
+                row.every((val, x) => val === trans.matriz[y][x])
+            );
+        }
+    
+        isValidForOperation(operation, matrix) {
+            let result = false;
+            switch (operation) {
+                case "suma":
+                case "resta":
+                    result =
+                        matrix.rows === this.filas && matrix.cols === this.columnas;
+                    break;
+                case "mult":
+                    result = this.columnas === matrix.rows;
+                    break;
+                default:
+                    result = false;
+                    break;
+            }
+    
+            return result;
+        }
+    }
+    omrf.Cajero = class Cajero{
+        constructor() {
+            this.transacciones = new Map();
+        }
+    
+        nuevaTransaccion(cantidad) {
+            let token = Math.random()
+                .toString(36)
+                .substr(2);
+    
+            this.transacciones.set(token, {
+                cantidad,
+                nombre,
+                pagado: 0,
+                porPagar: cantidad
+            });
+    
+            return token;
+        }
+    
+        pagar(token, cantidad) {
+            let info = this.transacciones.get(token);
+    
+            this.transacciones.set(token, {
+                cantidad: info.cantidad,
+                nombre: info.nombre,
+                pagado: info.pagado + cantidad,
+                porPagar: info.porPagar - cantidad
+            });
+    
+            let change = info.porPagar - pagado;
+    
+            console.log(`
+                Info del pago
+            `);
+    
+            if (change > 0) {
+                console.log(`
+                    Cambio
+                `);
+    
+                let changeArr = this.AMoneda(change);
+                return changeArr;
+            }
+    
+            return;
+        }
+    
+        AMoneda(num) {
+            const moneda = new Map([
+                ["Billete 1000 pesos", 1000],
+                ["Billete 500 pesos", 500],
+                ["Billete 200 pesos", 200],
+                ["Billete 100 pesos", 100],
+                ["Billete 50 pesos", 50],
+                ["Billete 20 pesos", 20],
+                ["Moneda 10 pesos", 10],
+                ["Moneda 5 pesos", 5],
+                ["Moneda 2 pesos", 2],
+                ["Moneda 1 peso", 1],
+                ["Moneda 50 centavos", 0.5],
+                ["Moneda 20 centavos", 0.2]
+            ]);
+    
+            let result = [];
+            let numCopy = num;
+    
+            moneda.forEach((val, key) => {
+                let amount = Math.floor(numCopy / val);
+                numCopy -= amount * val;
+                result.push(amount > 0 ? `${amount} ${key} ` : "");
+            });
+    
+            return result;
+        }
+    }
+
+    omrf.roman = {};//your design methods
+
+    omrf.words = {
+        UNIDADES: {
+            1: "uno",
+            2: "dos",
+            3: "tres",
+            4: "cuatro",
+            5: "cinco",
+            6: "seis",
+            7: "siete",
+            8: "ocho",
+            9: "nueve",
+            10: "diez",
+            11: "once",
+            12: "doce",
+            13: "trece",
+            14: "catorce",
+            15: "quince",
+            16: "dieciseis",
+            17: "diecisiete",
+            18: "dieciocho",
+            19: "diecinueve",
+            20: "veinte",
+            21: "veintino",
+            22: "veintidos",
+            23: "veintitres",
+            24: "veinticuatro",
+            25: "veinticinco",
+            26: "veintiseis",
+            27: "veintisiete",
+            28: "veintiocho",
+            29: "veintinueve"
+        },
+        
+        DECENAS: {
+            3: "treinta",
+            4: "cuarenta",
+            5: "cincuenta",
+            6: "sesenta",
+            7: "setenta",
+            8: "ochenta",
+            9: "noventa"
+        },
+        
+        CENTENAS: {
+            1: "ciento",
+            2: "doscientos",
+            3: "trescientos",
+            4: "cuatrocientos",
+            5: "quinientos",
+            6: "seiscientos",
+            7: "setecientos",
+            8: "ochocientos",
+            9: "novecientos"
+        },
+        
+        NumeroALetras: (numero) => {
+            if (numero === 0) {
+                return "cero";
+            } else if (numero < 30 && numero > 0) {
+                return UNIDADES[numero];
+            } else if (numero < 100) {
+                return decenas(numero);
+            } else if (numero < 1000) {
+                return cienes(numero);
+            } else if (numero < 1000000) {
+                return miles(numero);
+            } else {
+                return millones(numero);
+            }
+        },
+        
+        millones: (num) => {
+            let millones = Math.floor(num / 1000000),
+                resto = num - millones * 1000000,
+                result;
+        
+            if (millones >= 1000) {
+                result = miles(millones) + " millones";
+            } else if (millones >= 100) {
+                result = cienes(millones) + " millones";
+            } else if (millones >= 29) {
+                result = decenas(millones) + " millones";
+            } else if (millones === 1) {
+                result = "un millón";
+            } else {
+                result = UNIDADES[millones] + " millones";
+            }
+        
+            if (resto >= 1000) {
+                result += miles(resto);
+            } else if (resto >= 100) {
+                result += cienes(resto);
+            } else if (resto > 29) {
+                result += decenas(resto);
+            } else if (resto > 0) {
+                result += UNIDADES[resto];
+            }
+        
+            return result;
+        },
+        
+        miles: (num) => {
+            let millares = Math.floor(num / 1000),
+                resto = num - millares * 1000,
+                result;
+        
+            if (millares >= 100) {
+                result = cienes(millares) + " mil";
+            } else if (millares > 29) {
+                result = decenas(millares) + " mil";
+            } else if (millares === 1) {
+                result = "mil";
+            } else {
+                result = UNIDADES[millares] + " mil";
+            }
+        
+            if (resto >= 100) {
+                result += cienes(resto);
+            } else if (resto > 29) {
+                result += decenas(resto);
+            } else if (resto > 0) {
+                result += UNIDADES[resto];
+            }
+        
+            return result;
+        },
+        
+        cienes: (num) => {
+            let centenas = Math.floor(num / 100),
+                resto = num - centenas * 100;
+        
+            if (resto === 0) {
+                return centenas === 1 ? "cien" : CENTENAS[centenas];
+            }
+        
+            return CENTENAS[centenas] + " " + decenas(resto);
+        },
+        
+        decenas: (num) => {
+            let decenas = Math.floor(num / 10),
+                resto = num - decenas * 10,
+                decimales = resto % 1,
+                result;
+        
+            resto -= decimales;
+        
+            if (num <= 29) {
+                result = UNIDADES[num];
+            } else if (resto > 0) {
+                result = DECENAS[decenas] + " y " + UNIDADES[resto];
+            } else {
+                result = DECENAS[decenas];
+            }
+        
+            return result;
+        }
+    }
+    omrf.Point = class Point{
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        clone() {
+            return new omrf.Point(this.x, this.y);
+        }
+        static distance(p1, p2) {
+            let x = p1._x - p2._x;
+            let y = p1._y - p2._y;
+    
+            return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        }
+        static isPoint(punto) {
+            return punto instanceof omrf.Point;
+        }
+    }
 
     /////////////////  moduleName  /////////////////////////
-    wxyz.cashier = {};//your design methods
-    wxyz.roman = {};//your design methods
-    wxyz.words = {};//your design methods
+    omrf.line = {};//clone, isLine, isParallel, isPerperdicular
 
     /////////////////  moduleName  /////////////////////////
-    wxyz.shape = {};//shape : inheritace is optional
-    wxyz.point = {};//clone, isPoint, trichotomy
+    omrf.rectangle = {};//clone, area, perimeter, isRectangle
 
     /////////////////  moduleName  /////////////////////////
-    wxyz.line = {};//clone, isLine, isParallel, isPerperdicular
+    omrf.triangle = {};//clone, area, perimeter, isTriangle
 
     /////////////////  moduleName  /////////////////////////
-    wxyz.rectangle = {};//clone, area, perimeter, isRectangle
+    omrf.square = {};//clone, area, perimeter, isSquare
 
     /////////////////  moduleName  /////////////////////////
-    wxyz.triangle = {};//clone, area, perimeter, isTriangle
+    omrf.trapezoid = {};//clone, area, perimeter, isTrapezoid
 
-    /////////////////  moduleName  /////////////////////////
-    wxyz.square = {};//clone, area, perimeter, isSquare
-
-    /////////////////  moduleName  /////////////////////////
-    wxyz.trapezoid = {};//clone, area, perimeter, isTrapezoid
-
-    /////////////////  moduleName  /////////////////////////
-    //clone, area, perimeter, isCicle,
-    //collides, isInscribed, circunscribes
-    wxyz.circle = {};
+    omrf.Circulo =  class Circulo{
+        constructor(centro, radio) {
+            this.centro = centro;
+            this.radio = radio;
+        }
+    
+        clone() {
+            return new omrf.Circulo(this.centro, this.radio);
+        }
+    
+        area() {
+            return Math.PI * this.radio ** 2;
+        }
+    
+        perimeter() {
+            return 2 * Math.PI * this.radio;
+        }
+    
+        collides(circle) {
+            const distanciaCentro = omrf.Point.distance(this.centro, circle._center);
+            const radios = this.radio + circle._radius;
+    
+            return distanciaCentro <= radios;
+        }
+    
+        isInscribed(p1, p2, p3) {
+            const c = (p1 + p2 + p3) / 2;
+            const radio = Math.sqrt(c * (c - p1) * (c - p2) * (c - p3)) / c;
+    
+            return radio === this.radio;
+        }
+    
+        isCircunscribed(p1, p2, p3) {
+            const c = (p1 + p2 + p3) / 2;
+            const radio =
+                (p1 * p2 * p3) /
+                (4 * Math.sqrt(c * (c - p1) * (c - p2) * (c - p3)));
+    
+            return radio === this.radio;
+        }
+    
+        static isCircle(circulo) {
+            return circulo instanceof omrf.Circulo;
+        }
+    };
     return omrf
 }
 
