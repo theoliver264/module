@@ -93,20 +93,42 @@ function myModule(){
         randomAB: (x,y) =>Math.floor((Math.random() * y)+x),
         RandomN: "",  
     }
+    omrf.discrete = {
+        factorial: function(n) {
+            var total = 1; 
+            for (i=1; i<=n; i++) {
+                total = total * i; 
+            }
+            return total; 
+        }
+    }
 
-    /////////////////  moduleName  /////////////////////////
     omrf.date = {};//month, week, season, isLeap
 
-    /////////////////  moduleName  /////////////////////////
-    omrf.discrete = {};//factorial, permutation
 
-    /////////////////  moduleName  /////////////////////////
     //place text into a 'textarea' and get it from there
     //not from a file, may use example
     omrf.text = {};//words, sentences, paragraphs, isEmpty
 
-    /////////////////  moduleName  /////////////////////////
-    omrf.series = {};//rangeAB, rangeN, fibonacci
+    
+    omrf.series = {
+        rangeAB: (a,b) => {
+            for(let i = a; i<=b;i++) console.log(i)
+        },
+
+        fibonacci: (x) => {
+            let fib = []; // Initialize array!
+            fib[0] = 0;
+            fib[1] = 1;
+            for(let i=2; i<=x; i++)
+            {
+                // Next fibonacci number = previous + one before previous
+                // Translated to JavaScript:
+                fib[i] = fib[i-2] + fib[i-1];
+                console.log(fib[i]);
+            }
+        }
+    }
 
     /////////////////  moduleName  /////////////////////////
     //4-ops, dot, distance, isVector, isOrthogonal,
@@ -379,69 +401,80 @@ function myModule(){
             return result;
         }
     }
+    omrf.roman = function(num) {
+        let lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
+        for ( i in lookup ) {
+          while ( num >= lookup[i] ) {
+            roman += i;
+            num -= lookup[i];
+          }
+        }
+        return roman;
+    }
+    omrf.Words = class Words{
 
-    omrf.roman = {};//your design methods
-
-    omrf.words = {
-        UNIDADES: {
-            1: "uno",
-            2: "dos",
-            3: "tres",
-            4: "cuatro",
-            5: "cinco",
-            6: "seis",
-            7: "siete",
-            8: "ocho",
-            9: "nueve",
-            10: "diez",
-            11: "once",
-            12: "doce",
-            13: "trece",
-            14: "catorce",
-            15: "quince",
-            16: "dieciseis",
-            17: "diecisiete",
-            18: "dieciocho",
-            19: "diecinueve",
-            20: "veinte",
-            21: "veintino",
-            22: "veintidos",
-            23: "veintitres",
-            24: "veinticuatro",
-            25: "veinticinco",
-            26: "veintiseis",
-            27: "veintisiete",
-            28: "veintiocho",
-            29: "veintinueve"
-        },
+        constructor(){
+            this.UNIDADES = {
+                1: "uno",
+                2: "dos",
+                3: "tres",
+                4: "cuatro",
+                5: "cinco",
+                6: "seis",
+                7: "siete",
+                8: "ocho",
+                9: "nueve",
+                10: "diez",
+                11: "once",
+                12: "doce",
+                13: "trece",
+                14: "catorce",
+                15: "quince",
+                16: "dieciseis",
+                17: "diecisiete",
+                18: "dieciocho",
+                19: "diecinueve",
+                20: "veinte",
+                21: "veintino",
+                22: "veintidos",
+                23: "veintitres",
+                24: "veinticuatro",
+                25: "veinticinco",
+                26: "veintiseis",
+                27: "veintisiete",
+                28: "veintiocho",
+                29: "veintinueve"
+            }
+            
+            this.DECENAS = {
+                3: "treinta",
+                4: "cuarenta",
+                5: "cincuenta",
+                6: "sesenta",
+                7: "setenta",
+                8: "ochenta",
+                9: "noventa"
+            }
+            
+            this.CENTENAS = {
+                1: "ciento",
+                2: "doscientos",
+                3: "trescientos",
+                4: "cuatrocientos",
+                5: "quinientos",
+                6: "seiscientos",
+                7: "setecientos",
+                8: "ochocientos",
+                9: "novecientos"
+            }
+        }
         
-        DECENAS: {
-            3: "treinta",
-            4: "cuarenta",
-            5: "cincuenta",
-            6: "sesenta",
-            7: "setenta",
-            8: "ochenta",
-            9: "noventa"
-        },
         
-        CENTENAS: {
-            1: "ciento",
-            2: "doscientos",
-            3: "trescientos",
-            4: "cuatrocientos",
-            5: "quinientos",
-            6: "seiscientos",
-            7: "setecientos",
-            8: "ochocientos",
-            9: "novecientos"
-        },
-        
-        NumeroALetras: (numero) => {
+        NumeroALetras(numero) {
             if (numero === 0) {
                 return "cero";
             } else if (numero < 30 && numero > 0) {
-                return UNIDADES[numero];
+                return this.UNIDADES[numero];
             } else if (numero < 100) {
                 return decenas(numero);
             } else if (numero < 1000) {
@@ -451,9 +484,9 @@ function myModule(){
             } else {
                 return millones(numero);
             }
-        },
+        }
         
-        millones: (num) => {
+        millones(num){
             let millones = Math.floor(num / 1000000),
                 resto = num - millones * 1000000,
                 result;
@@ -467,7 +500,7 @@ function myModule(){
             } else if (millones === 1) {
                 result = "un millón";
             } else {
-                result = UNIDADES[millones] + " millones";
+                result = this.UNIDADES[millones] + " millones";
             }
         
             if (resto >= 1000) {
@@ -477,13 +510,13 @@ function myModule(){
             } else if (resto > 29) {
                 result += decenas(resto);
             } else if (resto > 0) {
-                result += UNIDADES[resto];
+                result += this.UNIDADES[resto];
             }
         
             return result;
-        },
+        }
         
-        miles: (num) => {
+        miles(num) {
             let millares = Math.floor(num / 1000),
                 resto = num - millares * 1000,
                 result;
@@ -495,7 +528,7 @@ function myModule(){
             } else if (millares === 1) {
                 result = "mil";
             } else {
-                result = UNIDADES[millares] + " mil";
+                result = this.UNIDADES[millares] + " mil";
             }
         
             if (resto >= 100) {
@@ -503,24 +536,24 @@ function myModule(){
             } else if (resto > 29) {
                 result += decenas(resto);
             } else if (resto > 0) {
-                result += UNIDADES[resto];
+                result += this.UNIDADES[resto];
             }
         
             return result;
-        },
+        }
         
-        cienes: (num) => {
+        cienes(num) {
             let centenas = Math.floor(num / 100),
                 resto = num - centenas * 100;
         
             if (resto === 0) {
-                return centenas === 1 ? "cien" : CENTENAS[centenas];
+                return centenas === 1 ? "cien" : this.CENTENAS[centenas];
             }
         
-            return CENTENAS[centenas] + " " + decenas(resto);
-        },
+            return this.CENTENAS[centenas] + " " + decenas(resto);
+        }
         
-        decenas: (num) => {
+        decenas(num){
             let decenas = Math.floor(num / 10),
                 resto = num - decenas * 10,
                 decimales = resto % 1,
@@ -529,11 +562,11 @@ function myModule(){
             resto -= decimales;
         
             if (num <= 29) {
-                result = UNIDADES[num];
+                result = this.UNIDADES[num];
             } else if (resto > 0) {
-                result = DECENAS[decenas] + " y " + UNIDADES[resto];
+                result = this.DECENAS[decenas] + " y " + this.UNIDADES[resto];
             } else {
-                result = DECENAS[decenas];
+                result = this.DECENAS[decenas];
             }
         
             return result;
@@ -561,15 +594,100 @@ function myModule(){
     /////////////////  moduleName  /////////////////////////
     omrf.line = {};//clone, isLine, isParallel, isPerperdicular
 
-    /////////////////  moduleName  /////////////////////////
-    omrf.rectangle = {};//clone, area, perimeter, isRectangle
 
-    /////////////////  moduleName  /////////////////////////
-    omrf.triangle = {};//clone, area, perimeter, isTriangle
+    omrf.rectangle = class Rectangle{
+        constructor(x,y){
+            this.x = x
+            this.y = y
+            this.sides = 4
+        }
 
-    /////////////////  moduleName  /////////////////////////
-    omrf.square = {};//clone, area, perimeter, isSquare
+        clone(rec){
+            if(rec instanceof omrf.Rectangle){
+                return new omrf.Rectangle(rec.x,rec.y)
+            }
+            else throw "No es un rectangulo"
+        }
 
+        area(rec) {
+            if(rec instanceof omrf.Rectangle){
+                return rec.x*rec.y
+            }
+            else throw "No es un rectangulo"
+        }
+
+        perimeter(rec){
+            if(rec instanceof omrf.Rectangle){
+                return (rec.x*2)+(rec.y*2)
+            }
+        }
+
+        isRectangle(rec){
+            return (rec instanceof omrf.Rectangle)
+        }
+    };
+    omrf.triangle = class Triangle {
+        constructor(x,h){
+            this.x = x
+            this.h = h
+            this.sides = 3
+        }
+
+        clone(tri){
+            if(tri instanceof omrf.Triangle){
+                return new omrf.Triangle(rec.x,rec.h)
+            }
+            else throw "No es un triangulo"
+        }
+
+        area(tri) {
+            if(tri instanceof omrf.Triangle){
+                return (tri.x*tri.h)/2
+            }
+            else throw "No es un triangulo"
+        }
+
+        perimeter(tri){
+            if(tri instanceof omrf.Triangle){
+                return tri.x*this.sides
+            }
+        }
+
+        isTriangle(tri){
+            return (tri instanceof omrf.Triangle)
+        }
+    };
+    omrf.square = class Square {
+        constructor(x){
+            this.x = x
+            this.sides = 4
+        }
+
+        clone(c){
+            if(c instanceof omrf.Square){
+                return new omrf.Square(c.x)
+            }
+            else throw "No es un cuadrado"
+        }
+
+        area(c) {
+            if(c instanceof omrf.Square){
+                return c.x*c.x
+            }
+            else throw "No es un cuadrado"
+        }
+
+        perimeter(c){
+            if(c instanceof omrf.Square){
+                return c.x*4
+            }
+            else throw "No es un cuadrado"
+        }
+
+        isSquare(c){
+            return (c instanceof omrf.Square)
+        }
+    }
     /////////////////  moduleName  /////////////////////////
     omrf.trapezoid = {};//clone, area, perimeter, isTrapezoid
 
