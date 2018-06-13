@@ -8,6 +8,11 @@
 </head>
 <body>
     <script src="./omrfx.js"></script>
-    <textarea id="text" style="width: 100%; height: 30%"></textarea>
+    <textarea id="text" style="width: 100%; height: 300px"></textarea>
+    <button onclick="omrf.text.words()">Words</button>
+    <button onclick="omrf.text.sentences()">Sentences</button>
+    <button onclick="omrf.text.paragraphs()">Paragraphs</button>
+    <button onclick="omrf.text.isEmpty()">isEmpty</button>
+    <p id="res"></p>
 </body>
 </html>

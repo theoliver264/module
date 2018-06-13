@@ -104,12 +104,47 @@ function myModule(){
     }
 
     //TODO
-    omrf.date = {};//month, week, season, isLeap 
+    omrf.date = {
+
+    };//month, week, season, isLeap 
+
+    omrf.text = {
+        words: () =>{
+            let palabras = 0
+            let f = document.getElementById("text").value
+            for(i = 0; i < f.length; i++){
+                if(f[i] != " " && (f[i+1] == " " || (f[i+1] == "." || f[i+1] == "," || f[i+1] == ";" || f[i+1] == "<" || f[i+1] == ">" || f[i+1] == "¿" || f[i+1] == "?")))
+                    palabras++
+            }
+            document.getElementById("res").innerHTML = "Palabras: " + palabras
+        },
+        sentences: () => {
+            let sentences = 0
+            let f = document.getElementById("text").value
+            for(i = 0; i < f.length; i++){
+                if(f[i] == "." || f[i] == "," || f[i] == ";" || f[i] == "<" || f[i] == ">" || f[i] == "¿" || f[i] == "?") 
+                    sentences++
+            }
+            document.getElementById("res").innerHTML = "Sentencias: " + sentences
+        },
+        paragraphs: () => {
+            let parrafos = 0
+            let f = document.getElementById("text").value
+            if(f != "") parrafos++
+            for(i = 0; i < f.length; i++){
+                if(f[i] == "\n" && f[i+1] == "\n")
+                    parrafos++
+            }
+            document.getElementById("res").innerHTML = "Parrafos: " + parrafos
+        },
+        isEmpty:() => document.getElementById("text").value == "" ? console.log(true) : console.log(false) 
+    }
 
     //TODO
-    //place text into a 'textarea' and get it from there
-    //not from a file, may use example
-    omrf.text = {};//words, sentences, paragraphs, isEmpty
+    omrf.line = {};//clone, isLine, isParallel, isPerperdicular
+
+    //TODO
+    omrf.trapezoid = {};//clone, area, perimeter, isTrapezoid
 
     
     omrf.series = {
@@ -136,7 +171,6 @@ function myModule(){
             this.vector = new Array(num)
             this.length = num
         }
-    
         setZeros(){
             for(let i = 0; i < this.vector.length; i++){
                 this.vector[i] = 0;
@@ -162,7 +196,6 @@ function myModule(){
                 this.vector[i] = (Math.random() * rango) + 1;
             }
         }
-        
         //Operaciones punto a punto
         sumV(vec){
             let resVec
@@ -216,12 +249,10 @@ function myModule(){
     
             return resVec
         }
-
         isVector(vec){
             return (vec instanceof omrf.Vector)
         }
     }
-
     omrf.Matriz =  class Matriz {
         constructor(filas, columnas) {
             this.filas = filas;
@@ -392,38 +423,31 @@ function myModule(){
         constructor() {
             this.transacciones = new Map();
         }
-    
         nuevaTransaccion(cantidad) {
             let token = Math.random()
                 .toString(36)
                 .substr(2);
-    
             this.transacciones.set(token, {
                 cantidad,
                 nombre,
                 pagado: 0,
                 porPagar: cantidad
             });
-    
             return token;
         }
     
         pagar(token, cantidad) {
             let info = this.transacciones.get(token);
-    
             this.transacciones.set(token, {
                 cantidad: info.cantidad,
                 nombre: info.nombre,
                 pagado: info.pagado + cantidad,
                 porPagar: info.porPagar - cantidad
             });
-    
             let change = info.porPagar - pagado;
-    
             console.log(`
                 Info del pago
             `);
-    
             if (change > 0) {
                 console.log(`
                     Cambio
@@ -432,10 +456,8 @@ function myModule(){
                 let changeArr = this.AMoneda(change);
                 return changeArr;
             }
-    
             return;
         }
-    
         AMoneda(num) {
             const moneda = new Map([
                 ["Billete 1000 pesos", 1000],
@@ -451,16 +473,13 @@ function myModule(){
                 ["Moneda 50 centavos", 0.5],
                 ["Moneda 20 centavos", 0.2]
             ]);
-    
             let result = [];
             let numCopy = num;
-    
             moneda.forEach((val, key) => {
                 let amount = Math.floor(numCopy / val);
                 numCopy -= amount * val;
                 result.push(amount > 0 ? `${amount} ${key} ` : "");
             });
-    
             return result;
         }
     }
@@ -474,9 +493,7 @@ function myModule(){
         }
         return roman;
     }
-
     omrf.Words = class Words{
-
         constructor(){
             this.UNIDADES = {
                 1: "uno",
@@ -532,8 +549,6 @@ function myModule(){
                 9: "novecientos"
             }
         }
-        
-        
         NumeroALetras(numero) {
             if (numero === 0) {
                 return "cero";
@@ -549,7 +564,6 @@ function myModule(){
                 return millones(numero);
             }
         }
-        
         millones(num){
             let millones = Math.floor(num / 1000000),
                 resto = num - millones * 1000000,
@@ -579,7 +593,6 @@ function myModule(){
         
             return result;
         }
-        
         miles(num) {
             let millares = Math.floor(num / 1000),
                 resto = num - millares * 1000,
@@ -605,7 +618,6 @@ function myModule(){
         
             return result;
         }
-        
         cienes(num) {
             let centenas = Math.floor(num / 100),
                 resto = num - centenas * 100;
@@ -616,7 +628,6 @@ function myModule(){
         
             return this.CENTENAS[centenas] + " " + decenas(resto);
         }
-        
         decenas(num){
             let decenas = Math.floor(num / 10),
                 resto = num - decenas * 10,
@@ -654,39 +665,29 @@ function myModule(){
             return punto instanceof omrf.Point;
         }
     }
-
-    /////////////////  moduleName  /////////////////////////
-    //TODO
-    omrf.line = {};//clone, isLine, isParallel, isPerperdicular
-
-
     omrf.rectangle = class Rectangle{
         constructor(x,y){
             this.x = x
             this.y = y
             this.sides = 4
         }
-
         clone(rec){
             if(rec instanceof omrf.Rectangle){
                 return new omrf.Rectangle(rec.x,rec.y)
             }
             else throw "No es un rectangulo"
         }
-
         area(rec) {
             if(rec instanceof omrf.Rectangle){
                 return rec.x*rec.y
             }
             else throw "No es un rectangulo"
         }
-
         perimeter(rec){
             if(rec instanceof omrf.Rectangle){
                 return (rec.x*2)+(rec.y*2)
             }
         }
-
         isRectangle(rec){
             return (rec instanceof omrf.Rectangle)
         }
@@ -697,27 +698,23 @@ function myModule(){
             this.h = h
             this.sides = 3
         }
-
         clone(tri){
             if(tri instanceof omrf.Triangle){
                 return new omrf.Triangle(rec.x,rec.h)
             }
             else throw "No es un triangulo"
         }
-
         area(tri) {
             if(tri instanceof omrf.Triangle){
                 return (tri.x*tri.h)/2
             }
             else throw "No es un triangulo"
         }
-
         perimeter(tri){
             if(tri instanceof omrf.Triangle){
                 return tri.x*this.sides
             }
         }
-
         isTriangle(tri){
             return (tri instanceof omrf.Triangle)
         }
@@ -727,69 +724,54 @@ function myModule(){
             this.x = x
             this.sides = 4
         }
-
         clone(c){
             if(c instanceof omrf.Square){
                 return new omrf.Square(c.x)
             }
             else throw "No es un cuadrado"
         }
-
         area(c) {
             if(c instanceof omrf.Square){
                 return c.x*c.x
             }
             else throw "No es un cuadrado"
         }
-
         perimeter(c){
             if(c instanceof omrf.Square){
                 return c.x*4
             }
             else throw "No es un cuadrado"
         }
-
         isSquare(c){
             return (c instanceof omrf.Square)
         }
     }
-
-    //TODO
-    /////////////////  moduleName  /////////////////////////
-    omrf.trapezoid = {};//clone, area, perimeter, isTrapezoid
-
     omrf.Circulo =  class Circulo{
         constructor(centro, radio) {
             this.centro = centro;
             this.radio = radio;
         }
-    
         clone() {
             return new omrf.Circulo(this.centro, this.radio);
         }
-    
         area() {
             return Math.PI * this.radio ** 2;
         }
-    
         perimeter() {
             return 2 * Math.PI * this.radio;
         }
-    
         collides(circle) {
             const distanciaCentro = omrf.Point.distance(this.centro, circle._center);
             const radios = this.radio + circle._radius;
     
             return distanciaCentro <= radios;
         }
-    
         isInscribed(p1, p2, p3) {
             const c = (p1 + p2 + p3) / 2;
             const radio = Math.sqrt(c * (c - p1) * (c - p2) * (c - p3)) / c;
     
             return radio === this.radio;
         }
-    
         isCircunscribed(p1, p2, p3) {
             const c = (p1 + p2 + p3) / 2;
             const radio =
@@ -798,7 +780,6 @@ function myModule(){
     
             return radio === this.radio;
         }
-    
         static isCircle(circulo) {
             return circulo instanceof omrf.Circulo;
         }
